@@ -1,0 +1,29 @@
+
+{
+  "description": "silva-pair-code",
+  "main": "./silva.js",
+  "type": "commonjs",
+  "engines" : { 
+    "node" : ">=20.0.0"
+    },
+    "scripts": {
+      "start": "pm2 start silva.js --deep-monitoring --attach --name silva",
+      "stop": "pm2 stop silva",
+     "restart": "pm2 restart silva"
+    },
+  "author": "Silva Tech",
+  "license": "GPL-3.0 license",
+  "dependencies": {
+    "@whiskeysockets/baileys": "npm:dgxeon-soket@^4.0.0", 
+    "qrcode": "^1.5.3",
+    "awesome-phonenumber": "^2.64.0",
+    "megajs": "^1.1.0",
+    "pino": "^8.1.0",
+    "path": "^0.12.7",
+    "phone" : "3.1.30",
+    "body-parser": "^1.20.1",
+    "express": "^4.18.1",
+    "path": "^0.12.7",
+    "pm2": "^5.2.0"
+   }
+}
