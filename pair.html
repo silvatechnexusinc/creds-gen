@@ -7,37 +7,38 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
 :root {
---primary: #00f5d4;
---primary-dark: #00b39b;
---secondary: #12121d;
---background: #0a0a12;
---card-bg: rgba(25, 25, 36, 0.95);
---text: #f8f8ff;
---text-muted: #b8b8d1;
---input-bg: rgba(255, 255, 255, 0.15);
---input-text: #ffffff;
---success: #6ee7b7;
---error: #fca5a5;
---warning: #fcd34d;
---border-color: rgba(0, 245, 212, 0.4);
---glass-blur: 16px;
---transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  --primary: #6b46ff;
+  --primary-dark: #5530e5;
+  --secondary: #12121d;
+  --background: #0f0f1a;
+  --card-bg: rgba(25, 25, 36, 0.95);
+  --text: #f8f8ff;
+  --text-muted: #b8b8d1;
+  --input-bg: rgba(255, 255, 255, 0.1);
+  --input-text: #ffffff;
+  --success: #6ee7b7;
+  --error: #ff6b6b;
+  --warning: #ffd166;
+  --border-color: rgba(107, 70, 255, 0.3);
+  --glass-blur: 20px;
+  --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  --radius: 16px;
 }
 
 [data-theme="light"] {  
-  --primary: #00b39b;  
-  --primary-dark: #00897b;  
+  --primary: #6b46ff;  
+  --primary-dark: #5530e5;  
   --secondary: #f9fafb;  
-  --background: #f3f4f6;  
+  --background: #f8f9ff;  
   --card-bg: rgba(255, 255, 255, 0.98);  
   --text: #1f2937;  
   --text-muted: #6b7280;  
-  --input-bg: rgba(0, 0, 0, 0.08);  
+  --input-bg: rgba(0, 0, 0, 0.05);  
   --input-text: #1f2937;  
-  --border-color: rgba(0, 179, 155, 0.4);  
+  --border-color: rgba(107, 70, 255, 0.3);  
 }  
 
 * {  
@@ -51,27 +52,34 @@ body {
   justify-content: center;  
   align-items: center;  
   min-height: 100vh;  
-  font-family: 'Space Grotesk', sans-serif;  
+  font-family: 'Inter', sans-serif;  
   background: var(--background);  
   color: var(--text);  
   background-image:   
-    radial-gradient(circle at 15% 15%, rgba(0, 245, 212, 0.15) 0%, transparent 45%),  
-    radial-gradient(circle at 85% 85%, rgba(0, 179, 155, 0.15) 0%, transparent 45%),  
-    linear-gradient(to bottom right, #0a0a12, #12121d);  
+    radial-gradient(circle at 15% 15%, rgba(107, 70, 255, 0.15) 0%, transparent 45%),  
+    radial-gradient(circle at 85% 85%, rgba(85, 48, 229, 0.15) 0%, transparent 45%),  
+    linear-gradient(to bottom right, #0f0f1a, #12121d);  
   background-attachment: fixed;  
   transition: var(--transition);  
 } 
-    /* Video background */
-        .video-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: -1;
-        }
- 
+
+/* Video background */
+.video-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.video-container video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.3;
+}
 
 .container {  
   display: flex;  
@@ -95,10 +103,10 @@ body {
   border-radius: 50%;  
   object-fit: cover;  
   border: 3px solid var(--primary);  
-  box-shadow: 0 0 30px rgba(0, 245, 212, 0.4),   
-              0 0 60px rgba(0, 245, 212, 0.2);  
+  box-shadow: 0 0 30px rgba(107, 70, 255, 0.4),   
+              0 0 60px rgba(107, 70, 255, 0.2);  
   transition: var(--transition);  
-  filter: drop-shadow(0 5px 15px rgba(0, 245, 212, 0.3));  
+  filter: drop-shadow(0 5px 15px rgba(107, 70, 255, 0.3));  
 }  
 
 .logo-glow {  
@@ -109,7 +117,7 @@ body {
   width: 120px;  
   height: 120px;  
   border-radius: 50%;  
-  background: radial-gradient(circle, rgba(0, 245, 212, 0.3) 0%, transparent 70%);  
+  background: radial-gradient(circle, rgba(107, 70, 255, 0.3) 0%, transparent 70%);  
   z-index: -1;  
   animation: pulse-glow 3s ease-in-out infinite;  
 }  
@@ -118,8 +126,8 @@ body {
   width: 100%;  
   padding: 2.5rem;  
   background: var(--card-bg);  
-  border-radius: 24px;  
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);  
+  border-radius: var(--radius);  
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);  
   backdrop-filter: blur(var(--glass-blur));  
   -webkit-backdrop-filter: blur(var(--glass-blur));  
   border: 1px solid var(--border-color);  
@@ -136,7 +144,7 @@ body {
   left: -50%;  
   width: 200%;  
   height: 200%;  
-  background: radial-gradient(circle, rgba(0, 245, 212, 0.05) 0%, transparent 70%);  
+  background: radial-gradient(circle, rgba(107, 70, 255, 0.05) 0%, transparent 70%);  
   z-index: -1;  
   pointer-events: none;  
 }  
@@ -150,8 +158,8 @@ h1 {
   font-weight: 700;  
   font-size: 2.2rem;  
   letter-spacing: -0.5px;  
-  font-family: 'Montserrat', sans-serif;  
-  text-shadow: 0 2px 10px rgba(0, 245, 212, 0.2);  
+  font-family: 'Space Grotesk', sans-serif;  
+  text-shadow: 0 2px 10px rgba(107, 70, 255, 0.2);  
 }  
 
 .subtitle {  
@@ -175,9 +183,9 @@ h1 {
   padding: 1.1rem 1.4rem;  
   background: var(--input-bg);  
   border: 2px solid var(--border-color);  
-  border-radius: 14px;  
+  border-radius: var(--radius);  
   color: var(--input-text);  
-  font-family: 'Space Grotesk', sans-serif;  
+  font-family: 'Inter', sans-serif;  
   font-size: 1rem;  
   font-weight: 500;  
   appearance: none;  
@@ -189,7 +197,7 @@ h1 {
 
 .country-select:focus {  
   border-color: var(--primary);  
-  box-shadow: 0 0 0 4px rgba(0, 245, 212, 0.3);  
+  box-shadow: 0 0 0 4px rgba(107, 70, 255, 0.3);  
 }  
 
 .select-arrow {  
@@ -212,9 +220,9 @@ h1 {
   padding: 1.1rem 1.4rem;  
   background: var(--input-bg);  
   border: 2px solid var(--border-color);  
-  border-radius: 14px;  
+  border-radius: var(--radius);  
   color: var(--input-text);  
-  font-family: 'Space Grotesk', sans-serif;  
+  font-family: 'Inter', sans-serif;  
   font-size: 1rem;  
   font-weight: 500;  
   transition: var(--transition);  
@@ -223,7 +231,7 @@ h1 {
 
 .input-field:focus {  
   border-color: var(--primary);  
-  box-shadow: 0 0 0 4px rgba(0, 245, 212, 0.3);  
+  box-shadow: 0 0 0 4px rgba(107, 70, 255, 0.3);  
 }  
 
 .input-field::placeholder {  
@@ -236,10 +244,10 @@ h1 {
   width: 100%;  
   padding: 1.2rem;  
   background: linear-gradient(135deg, var(--primary), var(--primary-dark));  
-  color: var(--secondary);  
+  color: white;  
   border: none;  
-  border-radius: 14px;  
-  font-family: 'Montserrat', sans-serif;  
+  border-radius: var(--radius);  
+  font-family: 'Space Grotesk', sans-serif;  
   font-size: 1.05rem;  
   font-weight: 600;  
   cursor: pointer;  
@@ -248,13 +256,13 @@ h1 {
   position: relative;  
   overflow: hidden;  
   z-index: 1;  
-  box-shadow: 0 6px 20px rgba(0, 245, 212, 0.4);  
+  box-shadow: 0 6px 20px rgba(107, 70, 255, 0.4);  
   letter-spacing: 0.5px;  
 }  
 
 .submit-btn:hover {  
   transform: translateY(-5px);  
-  box-shadow: 0 12px 30px rgba(0, 245, 212, 0.5);  
+  box-shadow: 0 12px 30px rgba(107, 70, 255, 0.5);  
   letter-spacing: 1px;  
 }  
 
@@ -281,7 +289,7 @@ h1 {
 .result-container {  
   margin-top: 1.8rem;  
   padding: 1.5rem;  
-  border-radius: 14px;  
+  border-radius: var(--radius);  
   font-size: 1.05rem;  
   transition: var(--transition);  
   opacity: 0;  
@@ -295,8 +303,8 @@ h1 {
   opacity: 1;  
   height: auto;  
   transform: scale(1);  
-  background: rgba(0, 245, 212, 0.12);  
-  border: 1px solid rgba(0, 245, 212, 0.3);  
+  background: rgba(107, 70, 255, 0.12);  
+  border: 1px solid rgba(107, 70, 255, 0.3);  
 }  
 
 .result-container.success {  
@@ -317,8 +325,8 @@ h1 {
   letter-spacing: 3px;  
   margin: 1rem 0;  
   color: var(--primary);  
-  font-family: 'Montserrat', sans-serif;  
-  text-shadow: 0 2px 8px rgba(0, 245, 212, 0.3);  
+  font-family: 'Space Grotesk', sans-serif;  
+  text-shadow: 0 2px 8px rgba(107, 70, 255, 0.3);  
   background: linear-gradient(90deg, var(--primary), var(--primary-dark));  
   -webkit-background-clip: text;  
   background-clip: text;  
@@ -336,7 +344,7 @@ h1 {
 
 .action-btn {  
   padding: 0.9rem 1.8rem;  
-  border-radius: 12px;  
+  border-radius: var(--radius);  
   font-weight: 600;  
   cursor: pointer;  
   transition: var(--transition);  
@@ -344,20 +352,20 @@ h1 {
   display: flex;  
   align-items: center;  
   gap: 0.6rem;  
-  font-family: 'Montserrat', sans-serif;  
+  font-family: 'Space Grotesk', sans-serif;  
   font-size: 0.95rem;  
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);  
 }  
 
 .copy-btn {  
   background: var(--primary);  
-  color: var(--secondary);  
+  color: white;  
 }  
 
 .copy-btn:hover {  
   background: var(--primary-dark);  
   transform: translateY(-3px);  
-  box-shadow: 0 8px 20px rgba(0, 245, 212, 0.3);  
+  box-shadow: 0 8px 20px rgba(107, 70, 255, 0.3);  
 }  
 
 .copy-btn.copied {  
@@ -412,7 +420,7 @@ h1 {
 
 .theme-toggle:hover {  
   transform: rotate(30deg) scale(1.1);  
-  box-shadow: 0 8px 25px rgba(0, 245, 212, 0.4);  
+  box-shadow: 0 8px 25px rgba(107, 70, 255, 0.4);  
 }  
 
 .theme-toggle i {  
