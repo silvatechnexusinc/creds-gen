@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Silva Tech Inc - Tools Portal for Automation, Pairing, and Connectivity"/>
+  <title>Silva Tech Tools Portal</title>
+
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+  <style>
+    :root {
+      --primary: #00e6b8;
+      --primary-dark: #00a97f;
+      --accent: #00ffc3;
+      --background: #050510;
+      --glass-bg: rgba(10, 10, 20, 0.8);
+      --border: rgba(255, 255, 255, 0.12);
+      --text: #f7f7f7;
+      --text-muted: #aaa;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--background);
+      color: var(--text);
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: url('https://files.catbox.moe/7ie012.jpg') center/cover no-repeat;
+      filter: brightness(0.35);
+      z-index: -3;
+    }
+
+    @media (orientation: landscape) {
+      body::before {
+        background-image: url('https://files.catbox.moe/gmwtd5.jpg');
+      }
+    }
+
+    /* Soft Glow Animation Overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(circle at 25% 25%, rgba(0,230,184,0.1), transparent 50%),
+                  radial-gradient(circle at 75% 75%, rgba(0,255,195,0.08), transparent 50%);
+      animation: glow 10s ease-in-out infinite alternate;
+      z-index: -2;
+    }
+
+    @keyframes glow {
+      0% { opacity: 0.6; transform: scale(1); }
+      100% { opacity: 1; transform: scale(1.1); }
+    }
+
+    /* Container Card */
+    .container {
+      width: 90%;
+      max-width: 900px;
+      padding: 3rem 2rem;
+      text-align: center;
+      background: var(--glass-bg);
+      border: 1px solid var(--border);
+      border-radius: 25px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 0 40px rgba(0, 230, 184, 0.1);
+      transition: transform 0.5s ease;
+    }
+
+    .container:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 0 60px rgba(0, 230, 184, 0.25);
+    }
+
+    .logo-container {
+      position: relative;
+      display: inline-block;
+    }
+
+    .logo {
+      width: 110px;
+      height: 110px;
+      filter: drop-shadow(0 0 20px rgba(0,230,184,0.5));
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-12px); }
+    }
+
+    .logo-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 130px;
+      height: 130px;
+      background: radial-gradient(circle, rgba(0,230,184,0.25), transparent 70%);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      filter: blur(10px);
+      animation: pulse 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.4; transform: translate(-50%, -50%) scale(0.9); }
+      100% { opacity: 0.7; transform: translate(-50%, -50%) scale(1.1); }
+    }
+
+    h1 {
+      font-size: 3.5rem;
+      margin: 1rem 0;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--primary), var(--accent), var(--primary-dark));
+      background-size: 300%;
+      -webkit-background-clip: text;
+      color: transparent;
+      animation: textflow 6s linear infinite;
+    }
+
+    @keyframes textflow {
+      to { background-position: 300% center; }
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      max-width: 700px;
+      margin: 0 auto 2rem;
+      line-height: 1.7;
+    }
+
+    .btn-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .btn {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(0,230,184,0.2);
+      color: var(--text);
+      padding: 1rem 1.2rem;
+      font-size: 1.05rem;
+      border-radius: 15px;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(8px);
+    }
+
+    .btn:hover {
+      background: rgba(0,230,184,0.1);
+      border-color: var(--primary);
+      box-shadow: 0 0 25px rgba(0,230,184,0.3);
+      transform: translateY(-6px);
+    }
+
+    .btn i {
+      margin-right: 10px;
+      font-size: 1.2rem;
+      transition: transform 0.3s;
+    }
+
+    .btn:hover i { transform: scale(1.2); }
+
+    .footer {
+      margin-top: 3rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .audio-control button {
+      background: transparent;
+      border: 1px solid var(--primary);
+      color: var(--text);
+      border-radius: 50%;
+      width: 38px;
+      height: 38px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .audio-control button:hover {
+      background: var(--primary);
+      color: #0a0a15;
+      box-shadow: 0 0 15px rgba(0,230,184,0.4);
+      transform: scale(1.1);
+    }
+
+    /* Particles */
+    .particles {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      background: var(--primary);
+      border-radius: 50%;
+      opacity: 0.6;
+      animation: floatUp 15s linear infinite;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) translateX(0); opacity: 0; }
+      10% { opacity: 0.7; }
+      90% { opacity: 0.4; }
+      100% { transform: translateY(-100vh) translateX(50px); opacity: 0; }
+    }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 2.3rem; }
+      .subtitle { font-size: 1rem; }
+      .container { padding: 2rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo-container">
+      <div class="logo-glow"></div>
+      <svg class="logo" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+      </svg>
+    </div>
+
+    <h1>Silva Tech Tools</h1>
+    <p class="subtitle">Streamlined automation tools to power your bots, pairing, and connections with simplicity and style.</p>
+
+    <div class="btn-grid">
+      <button onclick="window.open('/qr', '_self')" class="btn"><i class="fas fa-qrcode"></i> QR Code</button>
+      <button onclick="window.open('/pair', '_self')" class="btn"><i class="fas fa-link"></i> Pair Code</button>
+      <button onclick="window.open('https://github.com/SilvaTechB', '_blank')" class="btn"><i class="fab fa-github"></i> GitHub</button>
+      <button onclick="window.open('https://whatsapp.com/channel/0029VaAkETLLY6d8qhLmZt2v', '_blank')" class="btn"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+    </div>
+
+    <div class="footer">
+      <span>© Silva Tech Inc. All rights reserved.</span>
+      <div class="audio-control">
+        <button id="mute-btn"><i class="fas fa-volume-up"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="particles" id="particles"></div>
+
+  <audio id="background-audio" loop>
+    <source src="https://files.catbox.moe/755ni6.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    const audio = document.getElementById('background-audio');
+    const muteBtn = document.getElementById('mute-btn');
+    const icon = muteBtn.querySelector('i');
+
+    // Particles
+    const particlesContainer = document.getElementById('particles');
+    for (let i = 0; i < 60; i++) {
+      const p = document.createElement('div');
+      p.classList.add('particle');
+      p.style.left = Math.random() * 100 + '%';
+      p.style.top = Math.random() * 100 + '%';
+      p.style.animationDuration = (10 + Math.random() * 10) + 's';
+      p.style.animationDelay = Math.random() * 5 + 's';
+      particlesContainer.appendChild(p);
+    }
+
+    // Audio playback
+    audio.volume = 0.6;
+    audio.play().catch(() => {
+      console.log('Autoplay blocked');
+    });
+
+    muteBtn.onclick = () => {
+      audio.muted = !audio.muted;
+      icon.className = audio.muted ? 'fas fa-volume-mute' : 'fas fa-volume-up';
+    };
+  </script>
+</body>
+</html>
