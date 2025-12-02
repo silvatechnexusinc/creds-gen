@@ -1,22 +1,72 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Scan QR</title>
+<meta charset="UTF-8">
+<title>WhatsApp QR Login</title>
+<style>
+    body {
+        margin: 0;
+        background: linear-gradient(135deg, #0f0f0f, #1e1e1e, #121212);
+        font-family: "Segoe UI", Arial, sans-serif;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+    }
+    .card {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 30px 40px;
+        border-radius: 15px;
+        box-shadow: 0px 0px 15px rgba(0,0,0,0.5);
+        text-align: center;
+        backdrop-filter: blur(6px);
+    }
+    h2 {
+        margin-bottom: 20px;
+        font-size: 28px;
+        font-weight: 500;
+    }
+    img {
+        width: 300px;
+        height: 300px;
+        border-radius: 10px;
+        background: #fff;
+        padding: 10px;
+        box-shadow: 0px 0px 12px rgba(0,255,60,0.5);
+    }
+    .loading {
+        font-size: 16px;
+        margin-top: 10px;
+        animation: blink 1.2s infinite;
+    }
+    @keyframes blink {
+        0% { opacity: .2; }
+        50% { opacity: 1; }
+        100% { opacity: .2; }
+    }
+</style>
 </head>
-<body style="display:flex;align-items:center;justify-content:center;height:100vh;background:#fafafa;">
-    <div>
-        <h2 style="text-align:center;">Scan QR to Connect WhatsApp</h2>
-        <img id="qr" style="width:300px;border:1px solid #333" />
-    </div>
+<body>
 
-    <script>
-        const url = new URL(window.location.href);
-        const id = url.searchParams.get("id");
+<div class="card">
+    <h2>Scan WhatsApp QR</h2>
+    <img id="qr" src="" alt="QRCode">
+    <div class="loading">Waiting for QR...</div>
+</div>
 
-        const eventSource = new EventSource(`/qr/scan?id=${id}`);
-        eventSource.onmessage = (e) => {
-            document.getElementById("qr").src = e.data;
-        };
-    </script>
+<script>
+    const id = new URL(window.location.href).searchParams.get("id");
+    const eventSource = new EventSource(`/qr/scan?id=${id}`);
+
+    eventSource.onmessage = (e) => {
+        if (e.data === "connected") {
+            document.querySelector(".loading").innerHTML = "Connected! 🎉";
+            return;
+        }
+        document.getElementById("qr").src = e.data;
+    };
+</script>
+
 </body>
 </html>
