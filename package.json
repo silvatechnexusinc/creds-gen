@@ -14,7 +14,7 @@
   "author": "Silva Tech",
   "license": "GPL-3.0 license",
   "dependencies": {
-    "@whiskeysockets/baileys": "6.7.21", 
+     "gifted-baileys": "2.0.0",
     "qrcode": "^1.5.3",
     "awesome-phonenumber": "^2.64.0",
     "megajs": "^1.1.0",
