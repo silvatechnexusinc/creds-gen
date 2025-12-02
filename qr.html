@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Scan QR</title>
+</head>
+<body style="display:flex;align-items:center;justify-content:center;height:100vh;background:#fafafa;">
+    <div>
+        <h2 style="text-align:center;">Scan QR to Connect WhatsApp</h2>
+        <img id="qr" style="width:300px;border:1px solid #333" />
+    </div>
+
+    <script>
+        const url = new URL(window.location.href);
+        const id = url.searchParams.get("id");
+
+        const eventSource = new EventSource(`/qr/scan?id=${id}`);
+        eventSource.onmessage = (e) => {
+            document.getElementById("qr").src = e.data;
+        };
+    </script>
+</body>
+</html>
