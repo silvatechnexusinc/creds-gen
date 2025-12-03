@@ -1,72 +1,53 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<title>WhatsApp QR Login</title>
-<style>
-    body {
-        margin: 0;
-        background: linear-gradient(135deg, #0f0f0f, #1e1e1e, #121212);
-        font-family: "Segoe UI", Arial, sans-serif;
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-    }
-    .card {
-        background: rgba(255, 255, 255, 0.05);
-        padding: 30px 40px;
-        border-radius: 15px;
-        box-shadow: 0px 0px 15px rgba(0,0,0,0.5);
-        text-align: center;
-        backdrop-filter: blur(6px);
-    }
-    h2 {
-        margin-bottom: 20px;
-        font-size: 28px;
-        font-weight: 500;
-    }
-    img {
-        width: 300px;
-        height: 300px;
-        border-radius: 10px;
-        background: #fff;
-        padding: 10px;
-        box-shadow: 0px 0px 12px rgba(0,255,60,0.5);
-    }
-    .loading {
-        font-size: 16px;
-        margin-top: 10px;
-        animation: blink 1.2s infinite;
-    }
-    @keyframes blink {
-        0% { opacity: .2; }
-        50% { opacity: 1; }
-        100% { opacity: .2; }
-    }
-</style>
+    <title>WhatsApp QR Login</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial;
+            padding-top: 40px;
+        }
+        img {
+            width: 320px;
+            height: 320px;
+            border: 3px solid black;
+        }
+        #startBtn {
+            margin-top: 20px;
+            padding: 10px 25px;
+            background: black;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 
-<div class="card">
-    <h2>Scan WhatsApp QR</h2>
-    <img id="qr" src="" alt="QRCode">
-    <div class="loading">Waiting for QR...</div>
-</div>
+    <h2>📱 Scan to Connect WhatsApp</h2>
 
-<script>
-    const id = new URL(window.location.href).searchParams.get("id");
-    const eventSource = new EventSource(`/qr/scan?id=${id}`);
+    <img id="qrImg" src="" alt="QR loading...">
 
-    eventSource.onmessage = (e) => {
-        if (e.data === "connected") {
-            document.querySelector(".loading").innerHTML = "Connected! 🎉";
-            return;
+    <br>
+    <button id="startBtn" onclick="startQR()">Start QR Login</button>
+
+    <script>
+        async function startQR() {
+            await fetch("/qr");
         }
-        document.getElementById("qr").src = e.data;
-    };
-</script>
+
+        async function loadQR() {
+            const res = await fetch("/qr/get");
+            const data = await res.json();
+
+            if (data.qr) {
+                document.getElementById("qrImg").src = data.qr;
+            }
+        }
+
+        setInterval(loadQR, 1500);
+    </script>
 
 </body>
 </html>
