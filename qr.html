@@ -3,11 +3,10 @@
 <head>
   <title>Silva QR Login</title>
   <style>
-    body { background:#111; color:#fff; text-align:center; font-family:Arial; }
-    #box {
-      margin-top:40px; padding:20px; background:#222; 
-      border-radius:15px; width:350px; margin-left:auto; margin-right:auto;
-      box-shadow:0 0 20px #0f0;
+    body { background:#121212; color:white; font-family:Arial; text-align:center; }
+    #box { 
+      margin:40px auto; width:350px; background:#1e1e1e;
+      padding:20px; border-radius:15px; box-shadow:0 0 20px #0f0;
     }
     img { width:300px; border-radius:10px; }
     h2 { color:#0f0; }
@@ -16,9 +15,9 @@
 <body>
 
   <div id="box">
-    <h2>Scan QR to Login WhatsApp</h2>
-    <img id="qr" src="/qr/scan?time={{Date.now()}}">
-    <p>QR refreshes every time page loads.</p>
+    <h2>Scan QR Code to Login</h2>
+    <img id="qr" src="/qr/scan?refresh=<?php echo time(); ?>">
+    <p>Refresh this page if QR expires.</p>
   </div>
 
 </body>
