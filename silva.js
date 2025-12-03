@@ -1,25 +1,32 @@
+// silva.js
+
 const express = require('express');
 const app = express();
 const path = require('path');
 const bodyParser = require("body-parser");
 const PORT = process.env.PORT || 8000;
+
 let code = require('./pair');
+let qr = require('./qr');   // ⭐ NEW QR ROUTE
+
 require('events').EventEmitter.defaultMaxListeners = 500;
 
+// ROUTES
 app.use('/code', code);
+app.use('/qr', qr);  // ⭐ NEW QR API
 
-// Serve 'main.html' as the default page
+// Serve 'main.html' as default
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'main.html'));
 });
 
-// Serve 'pair.html' when visiting '/pair' route
+// Serve pair page
 app.get('/pair', (req, res) => {
   res.sendFile(path.join(__dirname, 'pair.html'));
 });
 
-// Serve 'qr.html' when visiting '/qr.js' route
-app.get('/qr', (req, res) => {
+// Serve QR display page
+app.get('/scan', (req, res) => {
   res.sendFile(path.join(__dirname, 'qr.html'));
 });
 
