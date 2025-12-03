@@ -1,53 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>WhatsApp QR Login</title>
-    <style>
-        body {
-            text-align: center;
-            font-family: Arial;
-            padding-top: 40px;
-        }
-        img {
-            width: 320px;
-            height: 320px;
-            border: 3px solid black;
-        }
-        #startBtn {
-            margin-top: 20px;
-            padding: 10px 25px;
-            background: black;
-            color: white;
-            border-radius: 10px;
-            cursor: pointer;
-        }
-    </style>
+  <title>Silva QR Login</title>
+  <style>
+    body { background:#111; color:#fff; text-align:center; font-family:Arial; }
+    #box {
+      margin-top:40px; padding:20px; background:#222; 
+      border-radius:15px; width:350px; margin-left:auto; margin-right:auto;
+      box-shadow:0 0 20px #0f0;
+    }
+    img { width:300px; border-radius:10px; }
+    h2 { color:#0f0; }
+  </style>
 </head>
 <body>
 
-    <h2>📱 Scan to Connect WhatsApp</h2>
-
-    <img id="qrImg" src="" alt="QR loading...">
-
-    <br>
-    <button id="startBtn" onclick="startQR()">Start QR Login</button>
-
-    <script>
-        async function startQR() {
-            await fetch("/qr");
-        }
-
-        async function loadQR() {
-            const res = await fetch("/qr/get");
-            const data = await res.json();
-
-            if (data.qr) {
-                document.getElementById("qrImg").src = data.qr;
-            }
-        }
-
-        setInterval(loadQR, 1500);
-    </script>
+  <div id="box">
+    <h2>Scan QR to Login WhatsApp</h2>
+    <img id="qr" src="/qr/scan?time={{Date.now()}}">
+    <p>QR refreshes every time page loads.</p>
+  </div>
 
 </body>
 </html>
